@@ -144,7 +144,23 @@ class Course(models.Model):
     def get_most_recent_section(self):
         return self.sections.all().order_by('term')[0]
 
+class GenericSection(models.Model):
+    course = models.ForeignKey(Course)
+    instructor = models.ForeignKey(Instructor)
+    rating = models.FloatField(blank=True, null=True)
+    useful_rating = models.FloatField(blank=True, null=True)
+    engagement_rating = models.FloatField(blank=True, null=True)
+    difficulty_rating = models.FloatField(blank=True, null=True)
+    competency_rating = models.FloatField(blank=True, null=True)
+    lecturing_rating = models.FloatField(blank=True, null=True)
+    enthusiasm_rating = models.FloatField(blank=True, null=True)
+    approachable_rating = models.FloatField(blank=True, null=True)
+    class Meta:
+        unique_together = ('course', 'instructor',)
+
 class Section(models.Model):
+    #TODO: remove blank and null argument once migration is completed.
+    generic = models.ForeignKey(GenericSection, blank=True, null=True)
     term = models.ForeignKey(Term, related_name='sections')
     course = models.ForeignKey(Course, related_name='sections')
 
