@@ -204,6 +204,7 @@ class Section(models.Model):
     code_slug = models.CharField(max_length=20)
 
     instructors = models.ManyToManyField(Instructor, related_name='sections')
+    generics = models.ManyToManyField(GenericSection, related_name='sections')
 
     grading_style = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -256,13 +257,16 @@ class Section(models.Model):
         return sum(nums)/len(nums)
 
     def _get_generics(self):
-        generics = []
+        generics = self.generics.all()
+        if generics:
+            return generics
         for instructor in self.instructors.all():
             generic, created = GenericSection.objects.get_or_create(course=self.course, instructor=instructor)
             if created:
                 generic.update_ratings()
-            generics.append(generic)
-        return generics
+            self.generics.add(generic)
+        return self.generics.all()
+
 
     def get_average_rating(self):
         generics = self._get_generics()
