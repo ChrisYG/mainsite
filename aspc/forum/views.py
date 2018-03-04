@@ -4,10 +4,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from aspc.forum.forms import PostForm, QuestionForm, AnswerForm, SearchForm
+from aspc.forum.forms import PostForm, QuestionForm, AnswerForm, SearchForm, TagForm
 from aspc.forum.models import Question, Post, Answer
 from django.core.mail import send_mail
-from aspc.settings import EMAIL_HOST_USER
+from aspc.settings import EMAIL_HOST_USER, EMAIL_FORUM_ADMIN
+from django.contrib import messages
 
 class PostView(View):
     @method_decorator(login_required)
@@ -62,6 +63,23 @@ class AnswerView(View):
             send_mail(subject,content,EMAIL_HOST_USER,[question.author.email])
         return redirect(reverse('question', kwargs={'question_id': question_id}))
 
+class TagView(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        form = TagForm()
+        return render(request, 'general/add_tag.html', {'form': form})
+    @method_decorator(login_required)
+    def post(self, request):
+        form = TagForm(request.POST)#, instance=review)
+        if form.is_valid():
+            tag_name = form.cleaned_data["name"]
+            messages.info(request, 'Your tag has been submitted and will be reviewed by admin.')
+            subject = 'A new tag is submitted by a user for review'
+            content = 'A user has submitted a new tag for review: {0}'.format(tag_name)
+            send_mail(subject,content,EMAIL_HOST_USER,[EMAIL_FORUM_ADMIN])
+        return render(request, 'general/add_tag.html', {'form' : form})
+
+
 
 @login_required
 def showAllPosts(request):
@@ -105,4 +123,8 @@ def home(request):
 @login_required
 def showResources(request):
     return render(request, 'general/resources.html')
+
+@login_required
+def about(request):
+    return render(request, 'general/about.html')
 

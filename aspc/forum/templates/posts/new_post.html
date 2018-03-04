@@ -20,13 +20,19 @@
             {% if field.name == 'anonymous' %}
                 {{ field }} {{ field.label }} 
                 {{ field.errors }} <br /><br /><br />
+            {% elif field.name == 'tags' %}
+                {{ field.label }} <br /><br />
+                <a href="{% url 'add_tag' %}" target="_blank">Add a tag</a>
+                {{ field }}
+                {{ field.errors }} <br /><br /><br />
             {% else %}
                 {{ field.label }} <br /><br />
                 {{ field }}
                 {{ field.errors }} <br /><br /><br />
             {% endif %}
         {% endfor %}
-        <input id="submit" class="mh-search-button" type="submit" value="Submit post &rarr;" />
+        
+        <input id="submit" class="mh-search-button" type="submit" value="Submit &rarr;" />
 	</form>
     <div style="margin: 20px 0;"></div>
 </div>

@@ -24,13 +24,18 @@ class QuestionForm(ModelForm):
             'tags': CheckboxSelectMultiple
         }
         labels = {
-            'tags': 'Choose tags for your post'
+            'tags': 'Choose tags for your question'
         }
 
 class AnswerForm(ModelForm):
     class Meta:
         model = Answer
         exclude = ['author','created_ts','question']
+
+class TagForm(ModelForm):
+    class Meta:
+        model = Tag
+        exclude = []
 
 class SearchForm(Form):
     tags = ModelMultipleChoiceField(queryset=Tag.objects, widget=CheckboxSelectMultiple)

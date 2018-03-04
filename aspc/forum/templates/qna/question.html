@@ -5,6 +5,7 @@
 		<h2>{{q.title}}</h2>
 	</p>
 	<p>{{q.text}}</p>
+	<a href="mailto:{{ p.author.email }}">Report</a>
 	<a href="{% url "new_answer" q.id %}"><h3>Write an answer</h3></a>
 	{% with q.answers.all as answers %}
 		{% if answers %}

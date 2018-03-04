@@ -6,5 +6,7 @@
     <p>{{ p.text|linebreaksbr  }}</p>
     {% if not p.anonymous %}
 		<a href="mailto:{{ p.author.email }}">Contact the student</a>
-	{% endif %}	
+	{% endif %}
+	<br/>	
+	<a href="mailto:{{ p.author.email }}">Report</a>
 </div>
